@@ -1,0 +1,100 @@
+models:
+  # Reasoning Models (for complex logic, math, code)
+  reasoning:
+    primary:
+      name: "claude-sonnet-4-thinking"
+      provider: "anthropic"
+      api_key_env: "ANTHROPIC_API_KEY"
+      cost_per_1m_input: 3.0
+      cost_per_1m_output: 15.0
+      max_tokens: 8192
+    
+    fallbacks:
+      - name: "gemini-2.5-pro"
+        provider: "google"
+        api_key_env: "GOOGLE_API_KEY"
+        cost_per_1m_input: 1.25
+        cost_per_1m_output: 10.0
+        max_tokens: 8192
+      
+      - name: "gpt-4-turbo"
+        provider: "openai"
+        api_key_env: "OPENAI_API_KEY"
+        cost_per_1m_input: 10.0
+        cost_per_1m_output: 30.0
+        max_tokens: 4096
+
+  # Fast Models (for simple queries, quick responses)
+  fast:
+    primary:
+      name: "gemini-2.5-flash"
+      provider: "google"
+      api_key_env: "GOOGLE_API_KEY"
+      cost_per_1m_input: 0.075
+      cost_per_1m_output: 0.30
+      max_tokens: 8192
+    
+    fallbacks:
+      - name: "groq-llama3-70b"
+        provider: "groq"
+        api_key_env: "GROQ_API_KEY"
+        cost_per_1m_input: 0.59
+        cost_per_1m_output: 0.79
+        max_tokens: 8000
+      
+      - name: "gpt-3.5-turbo"
+        provider: "openai"
+        api_key_env: "OPENAI_API_KEY"
+        cost_per_1m_input: 0.50
+        cost_per_1m_output: 1.50
+        max_tokens: 4096
+
+  # Cost-Optimized (for long responses)
+  cost_optimized:
+    primary:
+      name: "gemini-2.5-flash"
+      provider: "google"
+      api_key_env: "GOOGLE_API_KEY"
+      cost_per_1m_input: 0.075
+      cost_per_1m_output: 0.30
+      max_tokens: 8192
+    
+    fallbacks:
+      - name: "groq-mixtral-8x7b"
+        provider: "groq"
+        api_key_env: "GROQ_API_KEY"
+        cost_per_1m_input: 0.24
+        cost_per_1m_output: 0.24
+        max_tokens: 32768
+
+# Routing Rules
+routing:
+  reasoning_keywords:
+    - "analyze"
+    - "calculate"
+    - "solve"
+    - "reasoning"
+    - "logic"
+    - "algorithm"
+    - "code"
+    - "debug"
+    - "mathematical"
+    - "proof"
+  
+  fast_keywords:
+    - "quick"
+    - "simple"
+    - "what is"
+    - "define"
+    - "summarize"
+    - "list"
+  
+  long_response_threshold: 500  # tokens
+  complex_query_length: 100  # words
+
+# Retry Configuration
+retry:
+  max_attempts: 3
+  initial_delay: 1  # seconds
+  max_delay: 10
+  exponential_base: 2
